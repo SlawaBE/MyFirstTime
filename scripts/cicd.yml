@@ -1,0 +1,61 @@
+---
+- hosts: prod
+
+  tasks:
+   - name: install or update Apache
+     apt:
+      name: apache2
+      state: latest
+
+   - name: remove Apache config2
+     file:
+      path: /etc/apache2/sites-enabled/000-default.conf
+      state: absent
+
+   - name: copy Apache conf
+     copy:
+      src: /tmp/MyFirstTime/conf/apache/site.conf
+      dest: /etc/apache2/sites-enabled/site.conf
+
+   - name: copy Apache ports.conf
+     copy:
+      src: /tmp/MyFirstTime/conf/apache/ports.conf
+      dest: /etc/apache2/ports.conf
+
+   - name: restart Apache
+     service:
+      name: apache2
+      state: restarted
+
+
+   - name: install or update Nginx
+     apt:
+      name: nginx
+      state: latest
+
+   - name: remove Nginx config
+     file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
+
+   - name: copy Nginx config
+     copy:
+      src: /tmp/MyFirstTime/conf/nginx/site.conf
+      dest: /etc/nginx/sites-enabled/site.conf
+
+   - name: restart Nginx
+     service: 
+      name: nginx
+      state: restarted
+
+
+   - name: remove site
+     file:
+      path: /var/www/html
+      state: absent
+
+   - name: copy site
+     copy:
+      src: /tmp/MyFirstTime/html
+      dest: /var/www/
+      owner: www-data
